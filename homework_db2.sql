@@ -1,42 +1,48 @@
-CREATE TABLE IF NOT EXISTS genre (
-id SERIAL PRIMARY KEY,
-name VARCHAR(60) not NULL
+create table if not exists genre (
+id SERIAL primary key,
+name VARCHAR(60) unique not null
 );
 
-CREATE TABLE IF NOT EXISTS songwriter (
-	id SERIAL PRIMARY KEY,
-	name VARCHAR(60) not NULL
+create table if not exists songwriter (
+	id SERIAL primary key,
+	name VARCHAR(60) not null
 );
 
-CREATE TABLE IF NOT EXISTS genre_songwriter (
-	genre_id INTEGER REFERENCES genre(id),
-	songwriter_id INTEGER REFERENCES songwriter(id),
-	CONSTRAINT pk PRIMARY KEY (genre_id, songwriter_id)
+create table if not exists genre_songwriter (
+	genre_id INTEGER references genre(id),
+	songwriter_id INTEGER references songwriter(id),
+	constraint pk primary key (genre_id,
+songwriter_id)
 );
 
-CREATE TABLE IF NOT EXISTS album (
-	id SERIAL PRIMARY KEY,
+create table if not exists album (
+	id SERIAL primary key,
 	name VARCHAR(60) not null,
-	year INTEGER
+	year INTEGER check(year>1900)
 );
 
-CREATE TABLE IF NOT EXISTS songwriter_album (
-	songwriter_id INTEGER REFERENCES songwriter(id),
-	album_id INTEGER REFERENCES album(id),
-	CONSTRAINT sa PRIMARY KEY (songwriter_id, album_id)
+create table if not exists songwriter_album (
+	songwriter_id INTEGER references songwriter(id),
+	album_id INTEGER references album(id),
+	constraint sa primary key (songwriter_id,
+album_id)
 );
 
-CREATE TABLE IF NOT EXISTS track (
-	id SERIAL PRIMARY KEY,
-	album_id INTEGER NOT NULL REFERENCES album(id),
+create table if not exists track (
+	id SERIAL primary key,
+	album_id INTEGER not null references album(id),
 	name VARCHAR(60) not null,
-	time NUMERIC
+	time INTEGER not null
+	);
+
+create table if not exists collection (
+	id SERIAL primary key,
+	name VARCHAR(60) not null,
+	year INTEGER check(year>1900)
 );
 
-CREATE TABLE IF NOT EXISTS collection (
-	id SERIAL PRIMARY KEY,
-	track_id INTEGER NOT NULL REFERENCES track(id),
-	album_id INTEGER NOT NULL REFERENCES album(id),
-	name VARCHAR(60) not null,
-	year INTEGER
+create table if not exists collection_track (
+	collection_id INTEGER not null references collection(id),
+	track_id INTEGER not null references track(id)
 );
+
